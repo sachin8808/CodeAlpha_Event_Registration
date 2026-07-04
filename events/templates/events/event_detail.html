@@ -1,0 +1,35 @@
+{% extends "events/base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block content %}
+<a href="{% url 'home' %}" class="muted">&larr; Back to events</a>
+<div class="card" style="margin-top:16px;">
+  <h1>{{ event.title }}</h1>
+  <p class="muted">{{ event.date_time }} &middot; {{ event.location }}</p>
+  <p>{{ event.description }}</p>
+  <p class="muted">Organizer: {{ event.organizer.username|default:"Not specified" }}</p>
+
+  {% if event.is_full %}
+    <span class="badge full">This event is full</span>
+  {% else %}
+    <span class="badge">
+      {% if event.spots_left is not None %}{{ event.spots_left }} spots left{% else %}Open registration{% endif %}
+    </span>
+  {% endif %}
+
+  <div style="margin-top:16px;">
+    {% if user.is_authenticated %}
+      {% if already_registered %}
+        <p style="color:var(--success);">&#10003; You're registered for this event.</p>
+        <a href="{% url 'my_registrations' %}" class="btn">Manage my registrations</a>
+      {% else %}
+        <form action="{% url 'register_for_event_page' event.pk %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" {% if event.is_full %}disabled{% endif %}>Register for this event</button>
+        </form>
+      {% endif %}
+    {% else %}
+      <p class="muted">You need to <a href="{% url 'login' %}" style="color:var(--accent);">log in</a> to register.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

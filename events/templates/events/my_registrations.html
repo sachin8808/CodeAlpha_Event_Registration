@@ -1,0 +1,25 @@
+{% extends "events/base.html" %}
+{% block title %}My Registrations{% endblock %}
+{% block content %}
+<h1>My Registrations</h1>
+{% if registrations %}
+  {% for reg in registrations %}
+  <div class="card">
+    <h2 style="margin-top:0; margin-bottom:4px;">{{ reg.event.title }}</h2>
+    <p class="muted" style="margin:4px 0;">{{ reg.event.date_time }} &middot; {{ reg.event.location }}</p>
+    <p class="muted">Registered on {{ reg.registered_at }}</p>
+    {% if reg.cancelled %}
+      <span class="badge full">Cancelled</span>
+    {% else %}
+      <span class="badge confirmed">Confirmed</span>
+      <form action="{% url 'cancel_registration_page' reg.pk %}" method="post" style="display:inline; float:right;">
+        {% csrf_token %}
+        <button type="submit" class="danger">Cancel registration</button>
+      </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  <p class="muted">You haven't registered for anything yet. <a href="{% url 'home' %}" style="color:var(--accent);">Browse events</a>.</p>
+{% endif %}
+{% endblock %}

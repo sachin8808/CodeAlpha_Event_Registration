@@ -1,0 +1,26 @@
+{% extends "events/base.html" %}
+{% block title %}Upcoming Events{% endblock %}
+{% block content %}
+<h1>Upcoming Events</h1>
+{% if events %}
+  {% for event in events %}
+  <div class="card">
+    <h2 style="margin-top:0; margin-bottom:4px;">
+      <a href="{% url 'event_detail' event.pk %}" style="color:var(--text); text-decoration:none;">{{ event.title }}</a>
+    </h2>
+    <p class="muted" style="margin:4px 0;">{{ event.date_time }} &middot; {{ event.location }}</p>
+    <p style="margin:8px 0 12px;">{{ event.description|truncatewords:25 }}</p>
+    {% if event.is_full %}
+      <span class="badge full">Full</span>
+    {% else %}
+      <span class="badge">
+        {% if event.spots_left is not None %}{{ event.spots_left }} spots left{% else %}Open{% endif %}
+      </span>
+    {% endif %}
+    <a href="{% url 'event_detail' event.pk %}" class="btn" style="float:right;">View details</a>
+  </div>
+  {% endfor %}
+{% else %}
+  <p class="muted">No events yet. Add one from the <a href="/admin/" style="color:var(--accent);">admin panel</a>.</p>
+{% endif %}
+{% endblock %}

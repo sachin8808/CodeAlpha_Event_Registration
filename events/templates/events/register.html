@@ -1,0 +1,18 @@
+{% extends "events/base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<h1>Sign Up</h1>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" required>
+    <label for="email">Email (optional)</label>
+    <input type="email" name="email" id="email">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <button type="submit">Create Account</button>
+  </form>
+  <p class="muted" style="margin-top:12px;">Already have an account? <a href="{% url 'login' %}" style="color:var(--accent);">Log in</a></p>
+</div>
+{% endblock %}

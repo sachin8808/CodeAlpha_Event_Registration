@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Event Registration{% endblock %}</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --accent: #6366f1; --accent-hover: #4f46e5;
+    --text: #e2e8f0; --muted: #94a3b8; --border: #334155; --success: #22c55e; --error: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+  }
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 32px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px;
+  }
+  nav a { color: var(--text); text-decoration: none; margin-left: 18px; font-size: 14px; }
+  nav a:hover { color: var(--accent); }
+  .brand { font-weight: 700; font-size: 18px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  h1 { font-size: 26px; margin-top: 0; }
+  .muted { color: var(--muted); font-size: 13px; }
+  a.btn, button {
+    background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  a.btn:hover, button:hover { background: var(--accent-hover); }
+  button.danger { background: var(--error); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  input, textarea {
+    width: 100%; background: #0f172a; border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; border-radius: 8px; font-size: 14px; margin-bottom: 10px;
+  }
+  label { font-size: 13px; color: var(--muted); }
+  .messages { list-style: none; padding: 0; margin-bottom: 16px; }
+  .messages li { padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 14px; }
+  .messages li.success { background: rgba(34,197,94,0.1); border: 1px solid var(--success); }
+  .messages li.error { background: rgba(248,113,113,0.1); border: 1px solid var(--error); }
+  .messages li.info { background: rgba(99,102,241,0.1); border: 1px solid var(--accent); }
+  .badge { font-size: 12px; padding: 3px 8px; border-radius: 20px; background: var(--border); color: var(--muted); }
+  .badge.full { background: rgba(248,113,113,0.15); color: var(--error); }
+  .badge.confirmed { background: rgba(34,197,94,0.15); color: var(--success); }
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">📅 Event Registration</span>
+  <div>
+    <a href="{% url 'home' %}">Events</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'my_registrations' %}">My Registrations</a>
+      <span class="muted">Hi, {{ user.username }}</span>
+      <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" style="padding:6px 12px; font-size:13px;">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'register' %}">Sign Up</a>
+    {% endif %}
+  </div>
+</nav>
+<div class="container">
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>
